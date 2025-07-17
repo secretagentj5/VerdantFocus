@@ -32,12 +32,14 @@ export default function PomodoroTimer({
   const [timeLeft, setTimeLeft] = useState(task ? task.focusDuration * 60 : 25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [accumulatedFocusTime, setAccumulatedFocusTime] = useState(0);
+  const [focusTimeLeftBeforeBreak, setFocusTimeLeftBeforeBreak] = useState<number | null>(null);
+
 
   const initialTime = useMemo(() => {
     if (!task) return 25 * 60;
     switch (mode) {
       case "focus":
-        return task.focusDuration * 60;
+        return focusTimeLeftBeforeBreak !== null ? focusTimeLeftBeforeBreak : task.focusDuration * 60;
       case "shortBreak":
         return task.shortBreakDuration * 60;
       case "longBreak":
@@ -45,7 +47,7 @@ export default function PomodoroTimer({
       default:
         return task.focusDuration * 60;
     }
-  }, [task, mode]);
+  }, [task, mode, focusTimeLeftBeforeBreak]);
   
    useEffect(() => {
     // Reset timer state when the task changes
@@ -54,6 +56,7 @@ export default function PomodoroTimer({
       setIsRunning(false);
       setTimeLeft(task.focusDuration * 60);
       setAccumulatedFocusTime(0);
+      setFocusTimeLeftBeforeBreak(null);
     } else {
         setTimeLeft(25 * 60);
     }
@@ -70,9 +73,12 @@ export default function PomodoroTimer({
       }, 1000);
     } else if (timeLeft === 0 && isRunning) {
       setIsRunning(false);
-      if (mode === "focus" && accumulatedFocusTime > 0) {
-        onSessionComplete(accumulatedFocusTime);
+      if (mode === "focus") {
+        if (accumulatedFocusTime > 0) {
+          onSessionComplete(accumulatedFocusTime);
+        }
         setAccumulatedFocusTime(0);
+        // This is where you might auto-start a break, for now, it just stops.
       }
       // Notify parent or play sound here
     }
@@ -85,10 +91,13 @@ export default function PomodoroTimer({
 
   const startBreak = (breakType: "shortBreak" | "longBreak") => {
     setIsRunning(false);
-    if (mode === "focus" && accumulatedFocusTime > 0) {
-        onSessionComplete(accumulatedFocusTime);
+    if (mode === "focus") {
+        if (accumulatedFocusTime > 0) {
+            onSessionComplete(accumulatedFocusTime);
+        }
+        setAccumulatedFocusTime(0);
+        setFocusTimeLeftBeforeBreak(timeLeft);
     }
-    setAccumulatedFocusTime(0);
     setMode(breakType);
     setTimeLeft(breakType === "shortBreak" ? task!.shortBreakDuration * 60 : task!.longBreakDuration * 60);
   };
@@ -96,7 +105,7 @@ export default function PomodoroTimer({
   const resumeFocus = () => {
     setIsRunning(false);
     setMode("focus");
-    setTimeLeft(task!.focusDuration * 60);
+    setTimeLeft(focusTimeLeftBeforeBreak ?? task!.focusDuration * 60);
     setAccumulatedFocusTime(0);
   };
 
@@ -104,22 +113,23 @@ export default function PomodoroTimer({
     setIsRunning(false);
     setMode("focus");
     setAccumulatedFocusTime(0);
+    setFocusTimeLeftBeforeBreak(null);
     setTimeLeft(task ? task.focusDuration * 60 : 25 * 60);
   };
   
   const handleTaskCompletion = () => {
-    if (accumulatedFocusTime > 0) {
+    setIsRunning(false);
+    if (mode === 'focus' && accumulatedFocusTime > 0) {
         onSessionComplete(accumulatedFocusTime);
     }
     setAccumulatedFocusTime(0);
-    setIsRunning(false);
     onTaskComplete();
   }
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
-  const progress = (initialTime - timeLeft) / initialTime * 100;
+  const progress = initialTime > 0 ? (initialTime - timeLeft) / initialTime * 100 : 0;
 
   const chartColor = useMemo(() => {
     switch (mode) {
@@ -184,7 +194,7 @@ export default function PomodoroTimer({
               <Button size="lg" className="rounded-full w-24 h-24" onClick={toggleTimer}>
                 {isRunning ? <Pause className="w-10 h-10" /> : <Play className="w-10 h-10" />}
               </Button>
-              <Button size="icon" variant="ghost" onClick={handleTaskCompletion}>
+              <Button size="icon" variant="ghost" onClick={handleTaskCompletion} disabled={isRunning}>
                 <Check className="w-5 h-5" />
               </Button>
             </div>
