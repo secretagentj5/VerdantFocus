@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo, useState } from "react";
@@ -57,7 +58,7 @@ export default function TaskLists() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-48">
+          <ScrollArea className="h-40 sm:h-48">
             <div className="space-y-2">
               {activeTasks.length > 0 ? (
                 activeTasks.map((task) => (
@@ -90,7 +91,7 @@ export default function TaskLists() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-48">
+          <ScrollArea className="h-40 sm:h-48">
             <div className="space-y-2">
               {completedTasks.length > 0 ? (
                 completedTasks.map((task) => (

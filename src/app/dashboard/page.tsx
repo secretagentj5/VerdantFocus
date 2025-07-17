@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -45,7 +46,7 @@ export default function Dashboard() {
       <AppHeader />
       <main className="flex-grow p-4 sm:p-6 md:p-8 space-y-8">
         <StatsCards tasks={tasks} />
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-8">
             <TaskLists />
           </div>

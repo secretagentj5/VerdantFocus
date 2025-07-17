@@ -189,15 +189,15 @@ export default function PomodoroTimer({
 
   if (!task) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-center">
+      <div className="flex flex-col items-center justify-center h-48 sm:h-64 text-center">
         <p className="text-muted-foreground">Please add a task to begin.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="relative w-64 h-64" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}>
+    <div className="flex flex-col items-center gap-4 sm:gap-6">
+      <div className="relative w-48 h-48 sm:w-64 sm:h-64" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}>
          <ChartContainer config={{}} className="w-full h-full">
             <RadialBarChart
                 innerRadius="80%"
@@ -217,10 +217,10 @@ export default function PomodoroTimer({
             </RadialBarChart>
         </ChartContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-6xl font-bold tabular-nums">
+            <span className="text-5xl sm:text-6xl font-bold tabular-nums">
                 {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
             </span>
-            <span className="text-sm text-muted-foreground uppercase tracking-widest">
+            <span className="text-xs sm:text-sm text-muted-foreground uppercase tracking-widest">
                 {mode.replace('Break', ' Break')}
             </span>
         </div>
@@ -233,14 +233,14 @@ export default function PomodoroTimer({
               <Button size="icon" variant="ghost" className="w-12 h-12" onClick={resetTimer}>
                 <RefreshCw className="w-6 h-6" />
               </Button>
-              <Button size="lg" className="rounded-full w-28 h-28 shadow-lg" onClick={toggleTimer}>
-                {isRunning ? <Pause className="w-12 h-12" /> : <Play className="w-12 h-12" />}
+              <Button size="lg" className="rounded-full w-24 h-24 sm:w-28 sm:h-28 shadow-lg" onClick={toggleTimer}>
+                {isRunning ? <Pause className="w-10 h-10 sm:w-12 sm:h-12" /> : <Play className="w-10 h-10 sm:w-12 sm:h-12" />}
               </Button>
               <Button size="icon" variant="ghost" className="w-12 h-12" onClick={handleTaskCompletion} disabled={isRunning}>
                 <Check className="w-6 h-6" />
               </Button>
             </div>
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
               <Button variant="secondary" size="lg" className="shadow-sm" onClick={() => startBreak('shortBreak')}>
                 <Coffee className="mr-2 h-5 w-5" /> Short Break
               </Button>

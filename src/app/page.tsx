@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -67,8 +68,8 @@ export default function Home() {
       <AppHeader />
       <main className="flex-grow flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
         <Card className="w-full max-w-md shadow-lg animate-fade-in-up">
-          <CardContent className="p-6">
-            <div className="space-y-6">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-4 sm:space-y-6">
               <div className="space-y-2">
                 <h2 className="text-lg font-medium text-center">Focus Task</h2>
                 <div className="flex items-center gap-2">
