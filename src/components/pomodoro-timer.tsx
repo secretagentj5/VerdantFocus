@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Play, Pause, Coffee, RefreshCw, Check } from "lucide-react";
+import { Play, Pause, Coffee, RefreshCw, Check, Bed } from "lucide-react";
 import {
   RadialBarChart,
   RadialBar,
@@ -31,9 +31,13 @@ export default function PomodoroTimer({
   const [mode, setMode] = useState<TimerMode>("focus");
   const [isRunning, setIsRunning] = useState(false);
   
+  // These store the *current* time left for each mode
   const [focusTimeLeft, setFocusTimeLeft] = useState(task ? task.focusDuration * 60 : 25 * 60);
   const [shortBreakTimeLeft, setShortBreakTimeLeft] = useState(task ? task.shortBreakDuration * 60 : 5 * 60);
   const [longBreakTimeLeft, setLongBreakTimeLeft] = useState(task ? task.longBreakDuration * 60 : 15 * 60);
+
+  // This stores the focus time when a break is started
+  const [savedFocusTime, setSavedFocusTime] = useState(focusTimeLeft);
   
   const [accumulatedFocusTime, setAccumulatedFocusTime] = useState(0);
 
@@ -64,16 +68,18 @@ export default function PomodoroTimer({
 
    useEffect(() => {
     if (task) {
-      setMode("focus");
       setIsRunning(false);
-      setFocusTimeLeft(task.focusDuration * 60);
+      const initialFocusTime = task.focusDuration * 60;
+      setFocusTimeLeft(initialFocusTime);
+      setSavedFocusTime(initialFocusTime);
       setShortBreakTimeLeft(task.shortBreakDuration * 60);
       setLongBreakTimeLeft(task.longBreakDuration * 60);
       setAccumulatedFocusTime(0);
+      setMode('focus');
     } else {
-      setFocusTimeLeft(25 * 60);
-      setShortBreakTimeLeft(5 * 60);
-      setLongBreakTimeLeft(15 * 60);
+       setFocusTimeLeft(25 * 60);
+       setShortBreakTimeLeft(5 * 60);
+       setLongBreakTimeLeft(15 * 60);
     }
   }, [task]);
 
@@ -111,33 +117,42 @@ export default function PomodoroTimer({
   const toggleTimer = () => setIsRunning(!isRunning);
 
   const startBreak = (breakType: "shortBreak" | "longBreak") => {
+    setIsRunning(false);
     if (mode === "focus") {
-      if (accumulatedFocusTime > 0) {
-        onSessionComplete(accumulatedFocusTime);
-      }
-      setAccumulatedFocusTime(0);
+      setSavedFocusTime(focusTimeLeft); // Save current focus time
     }
     setMode(breakType);
-    setIsRunning(false); 
   };
   
   const resumeFocus = () => {
-    setMode("focus");
     setIsRunning(false);
+    setMode("focus");
+    setFocusTimeLeft(savedFocusTime); // Restore saved focus time
+    // Reset break timers
+    if (task) {
+        setShortBreakTimeLeft(task.shortBreakDuration * 60);
+        setLongBreakTimeLeft(task.longBreakDuration * 60);
+    }
   };
 
   const resetTimer = useCallback(() => {
     setIsRunning(false);
-    setAccumulatedFocusTime(0);
     
     if (mode === 'focus') {
-      setFocusTimeLeft(task ? task.focusDuration * 60 : 25 * 60);
+      const newFocusTime = task ? task.focusDuration * 60 : 25 * 60;
+      setFocusTimeLeft(newFocusTime);
+      setSavedFocusTime(newFocusTime);
+      // Only reset accumulated time if we are resetting the main focus timer
+      if (accumulatedFocusTime > 0) {
+        onSessionComplete(accumulatedFocusTime);
+      }
+      setAccumulatedFocusTime(0);
     } else if (mode === 'shortBreak') {
       setShortBreakTimeLeft(task ? task.shortBreakDuration * 60 : 5 * 60);
     } else if (mode === 'longBreak') {
       setLongBreakTimeLeft(task ? task.longBreakDuration * 60 : 15 * 60);
     }
-  }, [mode, task]);
+  }, [mode, task, accumulatedFocusTime, onSessionComplete]);
   
   const handleTaskCompletion = () => {
     setIsRunning(false);
@@ -225,7 +240,7 @@ export default function PomodoroTimer({
                 <Coffee className="mr-2 h-4 w-4" /> Short Break
               </Button>
               <Button variant="secondary" onClick={() => startBreak('longBreak')}>
-                <Coffee className="mr-2 h-4 w-4" /> Long Break
+                <Bed className="mr-2 h-4 w-4" /> Long Break
               </Button>
             </div>
           </>
