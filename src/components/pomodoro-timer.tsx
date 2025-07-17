@@ -120,6 +120,10 @@ export default function PomodoroTimer({
     setIsRunning(false);
     if (mode === "focus") {
       setSavedFocusTime(focusTimeLeft); // Save current focus time
+      if(accumulatedFocusTime > 0) {
+        onSessionComplete(accumulatedFocusTime);
+        setAccumulatedFocusTime(0);
+      }
     }
     setMode(breakType);
   };
@@ -173,8 +177,9 @@ export default function PomodoroTimer({
       case 'focus':
         return "hsl(var(--primary))";
       case 'shortBreak':
+        return "hsl(var(--chart-2))";
       case 'longBreak':
-        return "hsl(var(--accent))";
+        return "hsl(var(--chart-4))";
       default:
         return "hsl(var(--primary))";
     }
