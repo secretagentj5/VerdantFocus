@@ -29,17 +29,19 @@ export default function PomodoroTimer({
   onTaskComplete,
 }: PomodoroTimerProps) {
   const [mode, setMode] = useState<TimerMode>("focus");
-  const [timeLeft, setTimeLeft] = useState(task ? task.focusDuration * 60 : 25 * 60);
   const [isRunning, setIsRunning] = useState(false);
+  
+  const [focusTimeLeft, setFocusTimeLeft] = useState(task ? task.focusDuration * 60 : 25 * 60);
+  const [shortBreakTimeLeft, setShortBreakTimeLeft] = useState(task ? task.shortBreakDuration * 60 : 5 * 60);
+  const [longBreakTimeLeft, setLongBreakTimeLeft] = useState(task ? task.longBreakDuration * 60 : 15 * 60);
+  
   const [accumulatedFocusTime, setAccumulatedFocusTime] = useState(0);
-  const [focusTimeLeftBeforeBreak, setFocusTimeLeftBeforeBreak] = useState<number | null>(null);
-
 
   const initialTime = useMemo(() => {
     if (!task) return 25 * 60;
     switch (mode) {
       case "focus":
-        return focusTimeLeftBeforeBreak !== null ? focusTimeLeftBeforeBreak : task.focusDuration * 60;
+        return task.focusDuration * 60;
       case "shortBreak":
         return task.shortBreakDuration * 60;
       case "longBreak":
@@ -47,18 +49,31 @@ export default function PomodoroTimer({
       default:
         return task.focusDuration * 60;
     }
-  }, [task, mode, focusTimeLeftBeforeBreak]);
+  }, [task, mode]);
   
+  const timeLeft = useMemo(() => {
+    switch (mode) {
+      case "focus":
+        return focusTimeLeft;
+      case "shortBreak":
+        return shortBreakTimeLeft;
+      case "longBreak":
+        return longBreakTimeLeft;
+    }
+  }, [mode, focusTimeLeft, shortBreakTimeLeft, longBreakTimeLeft]);
+
    useEffect(() => {
-    // Reset timer state when the task changes
     if (task) {
       setMode("focus");
       setIsRunning(false);
-      setTimeLeft(task.focusDuration * 60);
+      setFocusTimeLeft(task.focusDuration * 60);
+      setShortBreakTimeLeft(task.shortBreakDuration * 60);
+      setLongBreakTimeLeft(task.longBreakDuration * 60);
       setAccumulatedFocusTime(0);
-      setFocusTimeLeftBeforeBreak(null);
     } else {
-        setTimeLeft(25 * 60);
+      setFocusTimeLeft(25 * 60);
+      setShortBreakTimeLeft(5 * 60);
+      setLongBreakTimeLeft(15 * 60);
     }
   }, [task]);
 
@@ -66,9 +81,17 @@ export default function PomodoroTimer({
     let interval: NodeJS.Timeout | null = null;
     if (isRunning && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-        if (mode === 'focus') {
-          setAccumulatedFocusTime(prev => prev + 1);
+        switch(mode) {
+          case 'focus':
+            setFocusTimeLeft(prev => prev - 1);
+            setAccumulatedFocusTime(prev => prev + 1);
+            break;
+          case 'shortBreak':
+            setShortBreakTimeLeft(prev => prev - 1);
+            break;
+          case 'longBreak':
+            setLongBreakTimeLeft(prev => prev - 1);
+            break;
         }
       }, 1000);
     } else if (timeLeft === 0 && isRunning) {
@@ -76,11 +99,9 @@ export default function PomodoroTimer({
       if (mode === "focus") {
         if (accumulatedFocusTime > 0) {
           onSessionComplete(accumulatedFocusTime);
+          setAccumulatedFocusTime(0);
         }
-        setAccumulatedFocusTime(0);
-        // This is where you might auto-start a break, for now, it just stops.
       }
-      // Notify parent or play sound here
     }
     return () => {
       if (interval) clearInterval(interval);
@@ -90,32 +111,33 @@ export default function PomodoroTimer({
   const toggleTimer = () => setIsRunning(!isRunning);
 
   const startBreak = (breakType: "shortBreak" | "longBreak") => {
-    setIsRunning(false);
     if (mode === "focus") {
-        if (accumulatedFocusTime > 0) {
-            onSessionComplete(accumulatedFocusTime);
-        }
-        setAccumulatedFocusTime(0);
-        setFocusTimeLeftBeforeBreak(timeLeft);
+      if (accumulatedFocusTime > 0) {
+        onSessionComplete(accumulatedFocusTime);
+      }
+      setAccumulatedFocusTime(0);
     }
     setMode(breakType);
-    setTimeLeft(breakType === "shortBreak" ? task!.shortBreakDuration * 60 : task!.longBreakDuration * 60);
+    setIsRunning(false); 
   };
   
   const resumeFocus = () => {
-    setIsRunning(false);
     setMode("focus");
-    setTimeLeft(focusTimeLeftBeforeBreak ?? task!.focusDuration * 60);
-    setAccumulatedFocusTime(0);
+    setIsRunning(false);
   };
 
-  const resetTimer = () => {
+  const resetTimer = useCallback(() => {
     setIsRunning(false);
-    setMode("focus");
     setAccumulatedFocusTime(0);
-    setFocusTimeLeftBeforeBreak(null);
-    setTimeLeft(task ? task.focusDuration * 60 : 25 * 60);
-  };
+    
+    if (mode === 'focus') {
+      setFocusTimeLeft(task ? task.focusDuration * 60 : 25 * 60);
+    } else if (mode === 'shortBreak') {
+      setShortBreakTimeLeft(task ? task.shortBreakDuration * 60 : 5 * 60);
+    } else if (mode === 'longBreak') {
+      setLongBreakTimeLeft(task ? task.longBreakDuration * 60 : 15 * 60);
+    }
+  }, [mode, task]);
   
   const handleTaskCompletion = () => {
     setIsRunning(false);
@@ -214,9 +236,14 @@ export default function PomodoroTimer({
                  <Button size="lg" onClick={resumeFocus}>
                     Resume Focus
                 </Button>
-                 <Button size="icon" variant="ghost" onClick={toggleTimer}>
-                     {isRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                 </Button>
+                 <div className="flex items-center justify-center gap-4">
+                     <Button size="icon" variant="ghost" onClick={resetTimer}>
+                        <RefreshCw className="w-5 h-5" />
+                     </Button>
+                     <Button size="icon" variant="ghost" onClick={toggleTimer}>
+                         {isRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                     </Button>
+                 </div>
             </div>
         )}
       </div>
