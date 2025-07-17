@@ -20,7 +20,10 @@ export default function AppHeader() {
         <div className="mr-4 flex items-center">
           <Link href="/" className="flex items-center gap-2">
             <Leaf className="h-6 w-6 text-primary" />
-            <span className="font-bold">VerdantFocus</span>
+            <div className="flex flex-col">
+              <span className="font-bold">VerdantFocus</span>
+              <span className="text-xs text-muted-foreground -mt-1">by quickclip</span>
+            </div>
           </Link>
         </div>
         <nav className="flex items-center gap-4 lg:gap-6">
