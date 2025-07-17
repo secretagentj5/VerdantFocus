@@ -42,9 +42,11 @@ export default function Home() {
   );
 
   const handleSessionComplete = (timeInSeconds: number) => {
-    if (activeTaskId) {
+    if (activeTaskId && timeInSeconds > 0) {
       addFocusTime(activeTaskId, timeInSeconds);
-      addPomodoroSession(activeTaskId);
+      if (activeTask && timeInSeconds >= activeTask.focusDuration * 60) {
+        addPomodoroSession(activeTaskId);
+      }
     }
   };
 
