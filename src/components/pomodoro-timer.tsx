@@ -197,7 +197,7 @@ export default function PomodoroTimer({
 
   return (
     <div className="flex flex-col items-center gap-6">
-      <div className="relative w-64 h-64">
+      <div className="relative w-64 h-64" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))' }}>
          <ChartContainer config={{}} className="w-full h-full">
             <RadialBarChart
                 innerRadius="80%"
@@ -205,7 +205,7 @@ export default function PomodoroTimer({
                 data={chartData}
                 startAngle={90}
                 endAngle={-270}
-                barSize={20}
+                barSize={12}
             >
                 <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
                 <RadialBar
@@ -230,22 +230,22 @@ export default function PomodoroTimer({
         {mode === 'focus' && (
           <>
             <div className="flex items-center justify-center gap-4">
-              <Button size="icon" variant="ghost" onClick={resetTimer}>
-                <RefreshCw className="w-5 h-5" />
+              <Button size="icon" variant="ghost" className="w-12 h-12" onClick={resetTimer}>
+                <RefreshCw className="w-6 h-6" />
               </Button>
-              <Button size="lg" className="rounded-full w-24 h-24" onClick={toggleTimer}>
-                {isRunning ? <Pause className="w-10 h-10" /> : <Play className="w-10 h-10" />}
+              <Button size="lg" className="rounded-full w-28 h-28 shadow-lg" onClick={toggleTimer}>
+                {isRunning ? <Pause className="w-12 h-12" /> : <Play className="w-12 h-12" />}
               </Button>
-              <Button size="icon" variant="ghost" onClick={handleTaskCompletion} disabled={isRunning}>
-                <Check className="w-5 h-5" />
+              <Button size="icon" variant="ghost" className="w-12 h-12" onClick={handleTaskCompletion} disabled={isRunning}>
+                <Check className="w-6 h-6" />
               </Button>
             </div>
             <div className="flex justify-center gap-4">
-              <Button variant="secondary" onClick={() => startBreak('shortBreak')}>
-                <Coffee className="mr-2 h-4 w-4" /> Short Break
+              <Button variant="secondary" size="lg" className="shadow-sm" onClick={() => startBreak('shortBreak')}>
+                <Coffee className="mr-2 h-5 w-5" /> Short Break
               </Button>
-              <Button variant="secondary" onClick={() => startBreak('longBreak')}>
-                <Bed className="mr-2 h-4 w-4" /> Long Break
+              <Button variant="secondary" size="lg" className="shadow-sm" onClick={() => startBreak('longBreak')}>
+                <Bed className="mr-2 h-5 w-5" /> Long Break
               </Button>
             </div>
           </>
@@ -253,15 +253,15 @@ export default function PomodoroTimer({
 
         {(mode === 'shortBreak' || mode === 'longBreak') && (
             <div className="flex flex-col items-center gap-4">
-                 <Button size="lg" onClick={resumeFocus}>
+                 <Button size="lg" onClick={resumeFocus} className="shadow-lg">
                     Resume Focus
                 </Button>
                  <div className="flex items-center justify-center gap-4">
-                     <Button size="icon" variant="ghost" onClick={resetTimer}>
-                        <RefreshCw className="w-5 h-5" />
+                     <Button size="icon" variant="ghost" className="w-12 h-12" onClick={resetTimer}>
+                        <RefreshCw className="w-6 h-6" />
                      </Button>
-                     <Button size="icon" variant="ghost" onClick={toggleTimer}>
-                         {isRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                     <Button size="lg" className="rounded-full w-20 h-20 shadow-md" onClick={toggleTimer}>
+                         {isRunning ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
                      </Button>
                  </div>
             </div>
