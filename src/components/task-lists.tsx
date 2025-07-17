@@ -49,7 +49,7 @@ export default function TaskLists() {
 
   return (
     <>
-      <Card>
+      <Card className="animate-fade-in" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
         <CardHeader>
           <CardTitle>Active Tasks</CardTitle>
           <CardDescription>
@@ -82,7 +82,7 @@ export default function TaskLists() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="animate-fade-in" style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}>
         <CardHeader>
           <CardTitle>Completed Tasks</CardTitle>
           <CardDescription>

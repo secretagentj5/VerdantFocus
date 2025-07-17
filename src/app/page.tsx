@@ -66,7 +66,7 @@ export default function Home() {
     <>
       <AppHeader />
       <main className="flex-grow flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
-        <Card className="w-full max-w-md shadow-lg">
+        <Card className="w-full max-w-md shadow-lg animate-fade-in-up">
           <CardContent className="p-6">
             <div className="space-y-6">
               <div className="space-y-2">
