@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -30,7 +31,6 @@ export default function PomodoroTimer({
   const [mode, setMode] = useState<TimerMode>("focus");
   const [timeLeft, setTimeLeft] = useState(task ? task.focusDuration * 60 : 25 * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const [focusTimeLeftBeforeBreak, setFocusTimeLeftBeforeBreak] = useState<number | null>(null);
   const [accumulatedFocusTime, setAccumulatedFocusTime] = useState(0);
 
   const initialTime = useMemo(() => {
@@ -53,7 +53,6 @@ export default function PomodoroTimer({
       setMode("focus");
       setIsRunning(false);
       setTimeLeft(task.focusDuration * 60);
-      setFocusTimeLeftBeforeBreak(null);
       setAccumulatedFocusTime(0);
     } else {
         setTimeLeft(25 * 60);
@@ -85,34 +84,25 @@ export default function PomodoroTimer({
   const toggleTimer = () => setIsRunning(!isRunning);
 
   const startBreak = (breakType: "shortBreak" | "longBreak") => {
-    if (mode === "focus") {
-      setFocusTimeLeftBeforeBreak(timeLeft);
-      if (accumulatedFocusTime > 0) {
+    setIsRunning(false);
+    if (mode === "focus" && accumulatedFocusTime > 0) {
         onSessionComplete(accumulatedFocusTime);
-        setAccumulatedFocusTime(0);
-      }
     }
-    setIsRunning(true);
+    setAccumulatedFocusTime(0);
     setMode(breakType);
     setTimeLeft(breakType === "shortBreak" ? task!.shortBreakDuration * 60 : task!.longBreakDuration * 60);
   };
   
   const resumeFocus = () => {
+    setIsRunning(false);
     setMode("focus");
-    setIsRunning(true);
-    if (focusTimeLeftBeforeBreak !== null) {
-      setTimeLeft(focusTimeLeftBeforeBreak);
-    } else {
-       // This case should ideally not happen if resuming from a break, but as a fallback:
-       setTimeLeft(task!.focusDuration * 60);
-    }
-    setFocusTimeLeftBeforeBreak(null);
+    setTimeLeft(task!.focusDuration * 60);
+    setAccumulatedFocusTime(0);
   };
 
   const resetTimer = () => {
     setIsRunning(false);
     setMode("focus");
-    setFocusTimeLeftBeforeBreak(null);
     setAccumulatedFocusTime(0);
     setTimeLeft(task ? task.focusDuration * 60 : 25 * 60);
   };
@@ -120,8 +110,9 @@ export default function PomodoroTimer({
   const handleTaskCompletion = () => {
     if (accumulatedFocusTime > 0) {
         onSessionComplete(accumulatedFocusTime);
-        setAccumulatedFocusTime(0);
     }
+    setAccumulatedFocusTime(0);
+    setIsRunning(false);
     onTaskComplete();
   }
 
