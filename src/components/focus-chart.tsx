@@ -18,6 +18,16 @@ import {
 } from "@/components/ui/chart";
 import type { Task } from "@/types/task";
 
+const CHART_COLORS = [
+  'hsl(var(--chart-1))',
+  'hsl(var(--chart-2))',
+  'hsl(var(--chart-3))',
+  'hsl(var(--chart-4))',
+  'hsl(var(--chart-5))',
+  'hsl(var(--chart-6))',
+  'hsl(var(--chart-7))',
+];
+
 interface FocusChartProps {
   tasks: Task[];
 }
@@ -26,10 +36,10 @@ export default function FocusChart({ tasks }: FocusChartProps) {
   const chartData = useMemo(() => {
     return tasks
       .filter((task) => task.totalFocusTime > 0)
-      .map((task) => ({
+      .map((task, index) => ({
         name: task.description,
         value: task.totalFocusTime,
-        fill: `hsl(var(--chart-${(tasks.indexOf(task) % 5) + 1}))`,
+        fill: CHART_COLORS[index % CHART_COLORS.length],
       }));
   }, [tasks]);
 
@@ -64,6 +74,7 @@ export default function FocusChart({ tasks }: FocusChartProps) {
                 nameKey="name"
                 innerRadius={60}
                 strokeWidth={5}
+                stroke="hsl(var(--background))"
               >
                 {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
