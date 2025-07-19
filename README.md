@@ -2,26 +2,29 @@
 
 ## Project Description
 
-VerdantFocus is a [brief description of your project - e.g., a modern focus/pomodoro timer application built with NextJS]. It aims to help users [explain the main goal or benefit - e.g., improve productivity and focus with a clean and intuitive interface].
+VerdantFocus is a modern focus and task management application built with NextJS. It combines a customizable Pomodoro timer with integrated task tracking to help users improve productivity and maintain focus.
 
 ## Features
 
-* [List key features, e.g.,] Pomodoro timer
-* [List key features, e.g.,] Task management
-* [List key features, e.g.,] Focus statistics/tracking
-* [List key features, e.g.,] Clean and nature-inspired UI
+* Customizable Pomodoro timer with adjustable focus and break durations
+* Task management with the ability to add, edit, and delete tasks
+* Visualizations and statistics to track focus time and task completion
+* Clean and nature-inspired user interface
+* Responsive design for use on different devices
 
 ## Technologies Used
 
 * NextJS
 * React
-* [Any other significant libraries or frameworks you are using, e.g., Tailwind CSS, Shadcn UI]
+* TypeScript
+* Tailwind CSS
+* Shadcn UI
 
 ## Getting Started
 
 ### Prerequisites
 
-* Node.js (specify version if necessary)
+* Node.js (LTS version recommended)
 * npm or yarn
 
 ### Installation
@@ -54,23 +57,21 @@ yarn dev
 
 ## Usage
 
-[Explain how to use your application. Provide clear steps or examples.]
+VerdantFocus provides a simple interface to manage your focus sessions and tasks. Use the Pomodoro timer to set dedicated work intervals followed by short or long breaks. Add your tasks to the list and mark them as complete as you work through them during your focus sessions. The dashboard provides insights into your productivity over time.
 
 ## Contributing
 
-We welcome contributions to VerdantFocus! Please see our [CONTRIBUTING.md](link/to/CONTRIBUTING.md) file for details on how to contribute.
+We welcome contributions to VerdantFocus! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for details on how to contribute.
 
 ## License
 
-This project is licensed under the [Specify your license, e.g., MIT License] - see the [LICENSE](link/to/LICENSE) file for details.
+This project is licensed under a custom license that prevents commercial use and unauthorized copying of the code. For more information, see the [LICENSE.md](LICENSE.md) file.
 
 ## Visuals
-
-[This is where you would add screenshots or GIFs of your application. You'll need to create these visuals yourself and upload them to a service like GitHub or Imgur, and then link to them here.]
 
 <img width="1202" height="953" alt="image" src="https://github.com/user-attachments/assets/772fdfde-593b-48a3-85df-311fd99a9376" />
 
 
 ## Contact
 
-If you have any questions or suggestions, feel free to open an issue on GitHub or contact us at [your email address].
+If you have any questions or suggestions, feel free to open an issue on GitHub or contact us.

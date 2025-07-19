@@ -1,27 +1,27 @@
 # Privacy Policy
 
-This Privacy Policy describes how [Your Project Name] collects, uses, and protects your information.
+This Privacy Policy describes how VerdantFocus handles your information.
 
 ## Information Collection
 
-[Explain what kind of information your application collects, if any. For example, does it store user settings, task data, etc.? If it's a purely client-side application with no backend, you might state that no personal data is collected.]
+VerdantFocus is a client-side application and does not collect any personal data. All user data, such as tasks and settings, is stored locally within your browser and is not transmitted to any server.
 
 ## Information Use
 
-[Explain how you use the information collected. If no data is collected, state that information is not used.]
+Since no personal data is collected, information is not used for any purpose other than the core functionality of the application (managing tasks and timer settings).
 
 ## Information Sharing
 
-[Explain if you share any information with third parties. If not, state that information is not shared.]
+No information is shared with third parties.
 
 ## Data Security
 
-[Describe the measures you take to protect user data.]
+User data is stored locally in your browser's storage. While steps are taken to ensure the integrity of this local data, it is important to be aware that local browser storage is not as secure as server-side storage.
 
 ## Changes to This Privacy Policy
 
-[State that you may update the privacy policy and how users will be notified of changes.]
+We may update this privacy policy from time to time. Any changes will be reflected on this page.
 
 ## Contact Us
 
-If you have any questions about this Privacy Policy, please contact us at [your email address].
+If you have any questions about this Privacy Policy, please open an issue on the project's GitHub repository.
