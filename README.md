@@ -68,11 +68,8 @@ This project is licensed under the [Specify your license, e.g., MIT License] - s
 
 [This is where you would add screenshots or GIFs of your application. You'll need to create these visuals yourself and upload them to a service like GitHub or Imgur, and then link to them here.]
 
-* **Screenshot 1:** [Add a brief description]
-  ![Screenshot 1 Description](link/to/screenshot1.png)
+<img width="1202" height="953" alt="image" src="https://github.com/user-attachments/assets/772fdfde-593b-48a3-85df-311fd99a9376" />
 
-* **Screenshot 2:** [Add a brief description]
-  ![Screenshot 2 Description](link/to/screenshot2.gif)
 
 ## Contact
 
